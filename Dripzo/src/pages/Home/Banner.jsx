@@ -1,8 +1,8 @@
 import React from "react";
-import image from"../../assets/images/banner/banner1.jpg"
+import image from"../../assets/images/banner/banner1.png"
 const Banner = () => {
     return (
-        <section className="w-full bg-gray-200">
+        <section className="w-full bg-base-100">
             <div className="container mx-auto flex flex-col-reverse md:flex-row items-center px-4 py-12 md:py-24 gap-8">
 
                 {/* Left: Headline / Text */}
@@ -21,7 +21,7 @@ const Banner = () => {
                     <img
                         src={image}
                         alt="image"
-                        className="w-full h-auto rounded-lg shadow-lg"
+                        className="w-full h-full rounded-lg "
                     />
                 </div>
             </div>
