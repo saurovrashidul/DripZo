@@ -48,13 +48,22 @@ async function run() {
 
 
         app.get("/parcels", async (req, res) => {
-            try {
-                const parcels = await parcelsCollection.find().toArray();
-                res.send(parcels);
-            } catch (error) {
-                res.status(500).send({ message: "Failed to fetch parcels" });
+            const email = req.query.email;
+
+            if (!email) {
+                return res.status(400).send({ message: "Email query is required" });
             }
+
+            const query = { userEmail: email };
+            const result = await parcelsCollection
+                .find(query)
+                .sort({ submissionDateTime: -1 }) 
+                .toArray();;
+
+            res.send(result);
         });
+
+
 
 
 
