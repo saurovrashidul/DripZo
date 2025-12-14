@@ -10,7 +10,7 @@ const Dashboard = () => {
                 {/* Page content here */}
                 <Outlet></Outlet>
                 <label htmlFor="my-drawer-3" className="btn drawer-button lg:hidden">
-                    Click here
+                    Click here to see Dashboard
                 </label>
 
             </div>
@@ -20,7 +20,7 @@ const Dashboard = () => {
                     {/* Sidebar content here */}
                     <Logo />
                     <li><NavLink to="/">Home</NavLink></li>
-                    <li><NavLink to="myparcel">My Parcel</NavLink></li>
+                    <li><NavLink to="/dashboard/myparcel">My Parcel</NavLink></li>
                 </ul>
 
             </div>
