@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import useAuth from "../../contexts/useAuth";
-import Logo from "../../components/Logo/logo";
+
 
 
 const MyParcelList = () => {
@@ -26,7 +26,7 @@ const MyParcelList = () => {
 
     return (
         <div className="p-6 w-full">
-            <Logo />
+         
             <h2 className="text-2xl font-bold mb-4">My Parcels</h2>
 
             {parcels.length === 0 && <p>No parcels found</p>}
