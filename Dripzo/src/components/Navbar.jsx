@@ -24,6 +24,11 @@ const Navbar = () => {
                         <li><NavLink to="/">Home</NavLink></li>
                         <li><NavLink to="servicelocations">Service Locations</NavLink></li>
                         <li><NavLink to="sendparcel">Send Parcel</NavLink></li>
+                        {
+                            user && <>
+                                <li><NavLink to="dashboard">Dashboard</NavLink></li>
+                            </>
+                        }
 
                     </ul>
                 </div>
@@ -34,6 +39,11 @@ const Navbar = () => {
                     <li><NavLink to="/">Home</NavLink></li>
                     <li><NavLink to="servicelocations">Service Locations</NavLink></li>
                     <li><NavLink to="sendparcel">Send Parcel</NavLink></li>
+                    {
+                        user && <>
+                            <li><NavLink to="dashboard">Dashboard</NavLink></li>
+                        </>
+                    }
 
                 </ul>
             </div>

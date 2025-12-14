@@ -8,9 +8,12 @@ import Home from './pages/Home/Home';
 import Login from './pages/Authentication/Login';
 import Register from './pages/Authentication/Register';
 import AuthProvider from './contexts/AuthProvider';
-import ServiceLocations from './pages/serviceLocations';
-import PrivateRoute from './route/PrivateRoute';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+// import PrivateRoute from './route/PrivateRoute';
 import SendParcel from './pages/SendParcel/SendParcel';
+import ServiceLocations from './pages/ServiceLocations';
+import Dashboard from './pages/Dashboard/Dashboard';
+import MyParcelList from './pages/Dashboard/MyParcelList';
 
 
 
@@ -34,9 +37,24 @@ const router = createBrowserRouter([
       },
       {
         path: "/sendparcel",
-        element: <SendParcel></SendParcel>
+        element: <SendParcel></SendParcel>,
+        loader: async () => {
+          const res = await fetch("/data/warehouses.json");
+          return res.json();
+        }
       }
     ],
+  },
+
+  {
+    path: "/dashboard",
+    element: <Dashboard></Dashboard>,
+    children: [
+      {
+        path: "myparcel",
+        element: <MyParcelList></MyParcelList>
+      }
+    ]
   },
 
   {
@@ -53,13 +71,16 @@ const router = createBrowserRouter([
 
 ]);
 
-
+const queryClient = new QueryClient();
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <div className='font-urbanist w-11/12 mx-auto'>
       <AuthProvider>
-        <RouterProvider router={router} />,
+        <QueryClientProvider client={queryClient}>
+          <RouterProvider router={router} />
+        </QueryClientProvider>
+
       </AuthProvider>
 
     </div>
