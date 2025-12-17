@@ -1,17 +1,23 @@
-import React from "react";
-import { Navigate, Outlet } from "react-router";
-import useAuth from "../contexts/useAuth"; // Make sure you have a useAuth hook
+import { Navigate, useLocation } from "react-router";
+import useAuth from "../contexts/useAuth";
 
-const PrivateRoute = () => {
-  const { user } = useAuth(); // user should be null if not logged in
 
-  if (!user) {
-    // Redirect to login if not authenticated
-    return <Navigate to="/login" replace />;
+const PrivateRoute = ({ children }) => {
+  const { user, loading } = useAuth();
+  const location = useLocation();
+
+  // wait until auth state loads
+  if (loading) {
+    return <p className="text-center mt-10">Loading...</p>;
   }
 
-  // If logged in, render the child routes
-  return <Outlet />;
+  // not logged in
+  if (!user) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
+  // logged in
+  return children;
 };
 
 export default PrivateRoute;

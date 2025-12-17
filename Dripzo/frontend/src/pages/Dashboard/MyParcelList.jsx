@@ -12,36 +12,36 @@ const MyParcelList = () => {
 
     // ---delete data from parcel list--
 
-const deleteParcelMutation = useMutation({
-    mutationFn: async (id) => {
-      const res = await axiosSecure.delete(`/parcels/${id}`);
-      return res.data;
-    },
-    onSuccess: () => {
-      // Refetch parcels after deletion
-      queryClient.invalidateQueries({ queryKey: ["my-parcels", user?.email] });
-    },
-  });
-
-  const handleDelete = async (parcelId) => {
-    const confirmResult = await Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Yes, delete it!",
-      cancelButtonText: "Cancel",
+    const deleteParcelMutation = useMutation({
+        mutationFn: async (id) => {
+            const res = await axiosSecure.delete(`/parcels/${id}`);
+            return res.data;
+        },
+        onSuccess: () => {
+            // Refetch parcels after deletion
+            queryClient.invalidateQueries({ queryKey: ["my-parcels", user?.email] });
+        },
     });
 
-    if (confirmResult.isConfirmed) {
-      try {
-        await deleteParcelMutation.mutateAsync(parcelId);
-        Swal.fire("Deleted!", "Your parcel has been deleted.", "success");
-      } catch (error) {
-        Swal.fire("Error!", "Failed to delete parcel.", error);
-      }
-    }
-  };
+    const handleDelete = async (parcelId) => {
+        const confirmResult = await Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, delete it!",
+            cancelButtonText: "Cancel",
+        });
+
+        if (confirmResult.isConfirmed) {
+            try {
+                await deleteParcelMutation.mutateAsync(parcelId);
+                Swal.fire("Deleted!", "Your parcel has been deleted.", "success");
+            } catch (error) {
+                Swal.fire("Error!", "Failed to delete parcel.", error);
+            }
+        }
+    };
 
 
     // ---get data from database--
@@ -51,7 +51,7 @@ const deleteParcelMutation = useMutation({
         isError,
     } = useQuery({
         queryKey: ["my-parcels", user?.email],
-        enabled: !!user?.email, 
+        enabled: !!user?.email,
         queryFn: async () => {
             const res = await axiosSecure.get(`/parcels?email=${user.email}`);
             return res.data;
@@ -66,18 +66,144 @@ const deleteParcelMutation = useMutation({
 
 
     return (
-        <div className="p-6 w-full">
+        // <div className="p-6 w-full">
 
+        //     <h2 className="text-2xl font-bold mb-4">My Parcels</h2>
+
+        //     {parcels.length === 0 && <p>No parcels found</p>}
+
+        //     <div className="overflow-x-auto">
+        //         <table className="table table-zebra w-full">
+        //             <thead>
+        //                 <tr>
+        //                     <th>#</th>
+
+        //                     <th>Type</th>
+        //                     <th>Cost</th>
+        //                     <th>Payment</th>
+        //                     <th>Status</th>
+        //                     <th>Date</th>
+        //                     <th>Actions</th>
+        //                 </tr>
+        //             </thead>
+
+        //             <tbody>
+        //                 {parcels.map((parcel, index) => (
+        //                     <tr key={parcel._id}>
+        //                         <td>{index + 1}</td>
+        //                         <td>{parcel.type}</td>
+        //                         <td>৳{parcel.totalCost}</td>
+
+        //                         {/* Payment Status */}
+        //                         <td>
+        //                             {parcel.paymentStatus === "paid" ? (
+        //                                 <span className="badge badge-success">Paid</span>
+        //                             ) : (
+        //                                 <span className="badge badge-warning">Unpaid</span>
+        //                             )}
+        //                         </td>
+
+        //                         {/* Delivery Status */}
+        //                         <td>
+        //                             <span className="badge badge-info">
+        //                                 {parcel.status || "Pending"}
+        //                             </span>
+        //                         </td>
+
+        //                         <td>{parcel.submissionDateTime}</td>
+
+        //                         {/* Action Buttons */}
+        //                         <td className="space-x-1">
+        //                             {/* View */}
+        //                             <button className="btn btn-xs btn-info">
+        //                                 View
+        //                             </button>
+
+        //                             {/* Pay */}
+        //                             {parcel.paymentStatus !== "paid" && (
+        //                                 <button className="btn btn-xs btn-success">
+        //                                     Pay
+        //                                 </button>
+        //                             )}
+
+        //                             {/* Delete */}
+        //                             <button
+        //                                 className="btn btn-xs btn-error"
+        //                                 onClick={() => handleDelete(parcel._id)}
+        //                             >
+        //                                 Delete
+        //                             </button>
+
+        //                         </td>
+        //                     </tr>
+        //                 ))}
+        //             </tbody>
+
+        //         </table>
+        //     </div>
+        // </div>
+
+        <div className="p-3 md:p-6 w-full">
             <h2 className="text-2xl font-bold mb-4">My Parcels</h2>
 
             {parcels.length === 0 && <p>No parcels found</p>}
 
-            <div className="overflow-x-auto">
+            {/* ✅ Mobile View (Cards) */}
+            <div className="grid gap-4 md:hidden">
+                {parcels.map((parcel) => (
+                    <div
+                        key={parcel._id}
+                        className="card bg-base-100 shadow-md border"
+                    >
+                        <div className="card-body p-4 space-y-2">
+                            <p><strong>Type:</strong> {parcel.type}</p>
+                            <p><strong>Cost:</strong> ৳{parcel.totalCost}</p>
+
+                            <p>
+                                <strong>Payment:</strong>{" "}
+                                {parcel.paymentStatus === "paid" ? (
+                                    <span className="badge badge-success">Paid</span>
+                                ) : (
+                                    <span className="badge badge-warning">Unpaid</span>
+                                )}
+                            </p>
+
+                            <p>
+                                <strong>Status:</strong>{" "}
+                                <span className="badge badge-info">
+                                    {parcel.status || "Pending"}
+                                </span>
+                            </p>
+
+                            <p className="text-sm text-gray-500">
+                                {parcel.submissionDateTime}
+                            </p>
+
+                            <div className="flex gap-2 flex-wrap">
+                                <button className="btn btn-xs btn-info">View</button>
+
+                                {parcel.paymentStatus !== "paid" && (
+                                    <button className="btn btn-xs btn-success">Pay</button>
+                                )}
+
+                                <button
+                                    className="btn btn-xs btn-error"
+                                    onClick={() => handleDelete(parcel._id)}
+                                >
+                                    Delete
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            {/* ✅ Desktop / Tablet View (Table) */}
+            <div className="overflow-x-auto hidden md:block">
                 <table className="table table-zebra w-full">
                     <thead>
                         <tr>
                             <th>#</th>
-
                             <th>Type</th>
                             <th>Cost</th>
                             <th>Payment</th>
@@ -94,7 +220,6 @@ const deleteParcelMutation = useMutation({
                                 <td>{parcel.type}</td>
                                 <td>৳{parcel.totalCost}</td>
 
-                                {/* Payment Status */}
                                 <td>
                                     {parcel.paymentStatus === "paid" ? (
                                         <span className="badge badge-success">Paid</span>
@@ -103,7 +228,6 @@ const deleteParcelMutation = useMutation({
                                     )}
                                 </td>
 
-                                {/* Delivery Status */}
                                 <td>
                                     <span className="badge badge-info">
                                         {parcel.status || "Pending"}
@@ -112,36 +236,27 @@ const deleteParcelMutation = useMutation({
 
                                 <td>{parcel.submissionDateTime}</td>
 
-                                {/* Action Buttons */}
                                 <td className="space-x-1">
-                                    {/* View */}
-                                    <button className="btn btn-xs btn-info">
-                                        View
-                                    </button>
+                                    <button className="btn btn-xs btn-info">View</button>
 
-                                    {/* Pay */}
                                     {parcel.paymentStatus !== "paid" && (
-                                        <button className="btn btn-xs btn-success">
-                                            Pay
-                                        </button>
+                                        <button className="btn btn-xs btn-success">Pay</button>
                                     )}
 
-                                    {/* Delete */}
                                     <button
                                         className="btn btn-xs btn-error"
                                         onClick={() => handleDelete(parcel._id)}
                                     >
                                         Delete
                                     </button>
-
                                 </td>
                             </tr>
                         ))}
                     </tbody>
-
                 </table>
             </div>
         </div>
+
     );
 };
 

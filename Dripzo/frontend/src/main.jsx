@@ -14,6 +14,7 @@ import SendParcel from './pages/SendParcel/SendParcel';
 import ServiceLocations from './pages/ServiceLocations';
 import Dashboard from './pages/Dashboard/Dashboard';
 import MyParcelList from './pages/Dashboard/MyParcelList';
+import PrivateRoute from './route/PrivateRoute';
 
 
 
@@ -37,7 +38,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/sendparcel",
-        element: <SendParcel></SendParcel>,
+        element: <PrivateRoute><SendParcel></SendParcel></PrivateRoute>,
         loader: async () => {
           const res = await fetch("/data/warehouses.json");
           return res.json();
