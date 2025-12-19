@@ -11,6 +11,21 @@ app.use(cors());
 app.use(express.json());
 
 
+// Store ID: dripz69452df167ad4
+// Store Password (API/Secret Key): dripz69452df167ad4@ssl
+
+
+// Merchant Panel URL: https://sandbox.sslcommerz.com/manage/ (Credential as you inputted in the time of registration)
+
+
+ 
+// Store name: testdripzwnu1
+// Registered URL: www.dripzo.com
+// Session API to generate transaction: https://sandbox.sslcommerz.com/gwprocess/v3/api.php
+// Validation API: https://sandbox.sslcommerz.com/validator/api/validationserverAPI.php?wsdl
+// Validation API (Web Service) name: https://sandbox.sslcommerz.com/validator/api/validationserverAPI.php
+ 
+// You may check our plugins available for multiple carts and libraries: https://github.com/sslcommerz
 
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.6id7hrn.mongodb.net/?appName=Cluster0`;
