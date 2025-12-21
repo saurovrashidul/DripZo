@@ -1,14 +1,34 @@
 import { useForm } from "react-hook-form";
-import { NavLink } from "react-router";
+import { NavLink, useLocation, useNavigate } from "react-router";
 import SocialLogin from "../../SocialLogin/SocialLogin";
 import Logo from "../../components/Logo/logo";
+import useAuth from "../../contexts/useAuth";
 
 export default function Login() {
   const { register, handleSubmit, formState: { errors } } = useForm();
 
+  const navigate = useNavigate();
+  const location = useLocation();
+  console.log(location)
+  const { signIn } = useAuth();
+
+  // where user wanted to go before login
+  const from = location.state?.from|| "/";
+
+
   const onSubmit = (data) => {
-    console.log("Login Data:", data);
+    console.log(data)
+    const { email, password } = data;
+
+    signIn(email, password)
+      .then(() => {
+        navigate(from, { replace: true });
+      })
+      .catch(error => {
+        console.error(error);
+      });
   };
+
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4">

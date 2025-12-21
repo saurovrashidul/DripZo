@@ -2,12 +2,15 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import useAuth from "../../contexts/useAuth";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router";
 
 
 const MyParcelList = () => {
     const axiosSecure = useAxiosSecure();
     const { user } = useAuth();
     const queryClient = useQueryClient();
+    const navigate = useNavigate();
+
 
 
     // ---delete data from parcel list--
@@ -18,7 +21,6 @@ const MyParcelList = () => {
             return res.data;
         },
         onSuccess: () => {
-            // Refetch parcels after deletion
             queryClient.invalidateQueries({ queryKey: ["my-parcels", user?.email] });
         },
     });
@@ -183,7 +185,13 @@ const MyParcelList = () => {
                                 <button className="btn btn-xs btn-info">View</button>
 
                                 {parcel.paymentStatus !== "paid" && (
-                                    <button className="btn btn-xs btn-success">Pay</button>
+                                    <button
+                                        className="btn btn-xs btn-success"
+                                        onClick={() => navigate(`/dashboard/pay/${parcel._id}`)}
+                                    >
+                                        Pay
+                                    </button>
+
                                 )}
 
                                 <button
@@ -240,7 +248,13 @@ const MyParcelList = () => {
                                     <button className="btn btn-xs btn-info">View</button>
 
                                     {parcel.paymentStatus !== "paid" && (
-                                        <button className="btn btn-xs btn-success">Pay</button>
+                                        <button
+                                            className="btn btn-xs btn-success"
+                                            onClick={() => navigate(`/dashboard/payment/${parcel._id}`)}
+                                        >
+                                            Pay
+                                        </button>
+
                                     )}
 
                                     <button

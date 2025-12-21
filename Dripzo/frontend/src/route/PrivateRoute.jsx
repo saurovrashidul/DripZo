@@ -8,7 +8,11 @@ const PrivateRoute = ({ children }) => {
 
   // wait until auth state loads
   if (loading) {
-    return <p className="text-center mt-10">Loading...</p>;
+    return <div className="flex items-center justify-center min-h-screen">
+      <span className="loading loading-spinner loading-lg"></span>
+    </div>
+
+
   }
 
   // not logged in

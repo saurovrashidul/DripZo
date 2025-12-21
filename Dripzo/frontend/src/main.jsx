@@ -15,6 +15,7 @@ import ServiceLocations from './pages/ServiceLocations';
 import Dashboard from './pages/Dashboard/Dashboard';
 import MyParcelList from './pages/Dashboard/MyParcelList';
 import PrivateRoute from './route/PrivateRoute';
+import Payment from './pages/Dashboard/Payment';
 
 
 
@@ -49,11 +50,15 @@ const router = createBrowserRouter([
 
   {
     path: "/dashboard",
-    element: <Dashboard></Dashboard>,
+    element: <PrivateRoute><Dashboard></Dashboard></PrivateRoute>,
     children: [
       {
         path: "myparcel",
         element: <MyParcelList></MyParcelList>
+      },
+      {
+        path: "/dashboard/payment/:id",
+        element: <Payment></Payment>
       }
     ]
   },
@@ -80,10 +85,8 @@ createRoot(document.getElementById('root')).render(
       <AuthProvider>
         <QueryClientProvider client={queryClient}>
           <RouterProvider router={router} />
-        </QueryClientProvider>
-
+        </QueryClientProvider>F
       </AuthProvider>
-
     </div>
   </StrictMode>,
 )
