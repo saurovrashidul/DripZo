@@ -1,6 +1,7 @@
+const SSLCommerzPayment = require("sslcommerz-lts");
 const express = require("express");
 const cors = require("cors");
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require("dotenv").config();
 
 const app = express();
@@ -11,6 +12,11 @@ app.use(cors());
 app.use(express.json());
 
 
+const STORE_ID = process.env.STORE_ID;
+const STORE_PASSWORD = process.env.STORE_PASSWORD;
+
+
+
 // Store ID: dripz69452df167ad4
 // Store Password (API/Secret Key): dripz69452df167ad4@ssl
 
@@ -18,13 +24,13 @@ app.use(express.json());
 // Merchant Panel URL: https://sandbox.sslcommerz.com/manage/ (Credential as you inputted in the time of registration)
 
 
- 
+
 // Store name: testdripzwnu1
 // Registered URL: www.dripzo.com
 // Session API to generate transaction: https://sandbox.sslcommerz.com/gwprocess/v3/api.php
 // Validation API: https://sandbox.sslcommerz.com/validator/api/validationserverAPI.php?wsdl
 // Validation API (Web Service) name: https://sandbox.sslcommerz.com/validator/api/validationserverAPI.php
- 
+
 // You may check our plugins available for multiple carts and libraries: https://github.com/sslcommerz
 
 
@@ -49,6 +55,8 @@ async function run() {
         const parcelsCollection = db.collection("parcels");
 
 
+        // ---------------parcel APIs----------------
+
         app.post("/parcels", async (req, res) => {
             try {
                 const parcel = req.body;
@@ -61,6 +69,11 @@ async function run() {
         });
 
 
+        // app.get("/parcels", async (req, res) => {
+        //     const result = await parcelsCollection.find().toArray();
+        //     res.send(result);
+        // });
+
 
         app.get("/parcels", async (req, res) => {
             const email = req.query.email;
@@ -72,11 +85,45 @@ async function run() {
             const query = { userEmail: email };
             const result = await parcelsCollection
                 .find(query)
-                .sort({ submissionDateTime: -1 }) 
+                .sort({ submissionDateTime: -1 })
                 .toArray();;
 
             res.send(result);
         });
+
+
+        app.get("/parcels/:id", async (req, res) => {
+            const id = req.params.id;
+
+            const result = await parcelsCollection.findOne({
+                _id: new ObjectId(id),
+            });
+
+            res.send(result);
+        })
+
+        // -------------- payment APIs ---------------
+
+        app.post("/create-payment", async (req, res) => {
+            const { parcelId, amount, customerName, customerEmail } = req.body
+            console.log(payment, 'recievng payemnt data from cl')
+            const tranId = new ObjectId().toString();
+            const data = {
+
+                store_id: `${process.env.STORE_ID}`,
+                store_passwd: `${process.env.STORE_PASSWORD}`,
+                total_amount: amount,
+                tran_id: tranId,
+                success_url: "http://yoursite.com/success.php",
+                fail_url: "http://yoursite.com/fail.php",
+                cancel_url: "http://yoursite.com/cancel.php",
+                cus_name:  customerName,
+                cus_email: customerEmail,
+                parcel_ID: parcelId
+
+
+            }
+        })
 
 
 
