@@ -1,8 +1,10 @@
-const SSLCommerzPayment = require("sslcommerz-lts");
 const express = require("express");
+const qs = require("qs");
 const cors = require("cors");
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+const { default: axios } = require("axios");
 require("dotenv").config();
+
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -51,8 +53,9 @@ async function run() {
         await client.connect();
 
 
-        const db = client.db("parcelDB");
-        const parcelsCollection = db.collection("parcels");
+        const parcelsCollection = client.db("parcelDB").collection("parcels");
+        const paymentsCollection= client.db("parcelDB").collection("payments")
+
 
 
         // ---------------parcel APIs----------------
@@ -105,24 +108,80 @@ async function run() {
         // -------------- payment APIs ---------------
 
         app.post("/create-payment", async (req, res) => {
-            const { parcelId, amount, customerName, customerEmail } = req.body
-            console.log(payment, 'recievng payemnt data from cl')
+            const { transactionId, parcelId, amount, customerName, customerEmail } = req.body
+            //    const payment = req.body
+            //     console.log(payment, 'recievng payemnt data from cl')
             const tranId = new ObjectId().toString();
-            const data = {
 
-                store_id: `${process.env.STORE_ID}`,
-                store_passwd: `${process.env.STORE_PASSWORD}`,
+
+            await paymentsCollection.insertOne({
+                tranId,
+                parcelId,
+                amount: Number(amount),
+                customerName,
+                customerEmail,
+                status: "pending",
+                createdAt: new Date()
+            });
+
+            const initiate = {
+                store_id: "dripz69452df167ad4",
+                store_passwd: "dripz69452df167ad4@ssl",
+
                 total_amount: amount,
+                currency: "BDT",
                 tran_id: tranId,
-                success_url: "http://yoursite.com/success.php",
-                fail_url: "http://yoursite.com/fail.php",
-                cancel_url: "http://yoursite.com/cancel.php",
-                cus_name:  customerName,
+
+                success_url: "http://localhost:5000/payment-success",
+                fail_url: "http://localhost:5000/payment-fail",
+                cancel_url: "http://localhost:5000/payment-cancel",
+                shipping_method: "Courier",
+                product_name: "Parcel Delivery",
+                product_category: "Logistics",
+                product_profile: "general",
+                cus_name: customerName,
                 cus_email: customerEmail,
-                parcel_ID: parcelId
+                cus_add1: "Dhaka",
+                cus_add2: "Dhaka",
+                cus_city: "Dhaka",
+                cus_state: "Dhaka",
+                cus_postcode: "1000",
+                cus_country: "Bangladesh",
+                cus_phone: "01711111111",
+                cus_fax: "01711111111",
+
+                ship_name: customerName,
+                ship_add1: "Dhaka",
+                ship_add2: "Dhaka",
+                ship_city: "Dhaka",
+                ship_state: "Dhaka",
+                ship_postcode: "1000",
+                ship_country: "Bangladesh",
+
+                multi_card_name: "mastercard,visacard,amexcard",
+
+                value_a: "ref001_A",
+                value_b: "ref002_B",
+                value_c: "ref003_C",
+                value_d: "ref004_D",
+            };
 
 
-            }
+            const response = await axios({
+                url: "https://sandbox.sslcommerz.com/gwprocess/v4/api.php",
+                method: "POST",
+                data: initiate,
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+            })
+
+
+            const gateWayPageUrl = response?.data?.GatewayPageURL
+            res.send({gateWayPageUrl})
+            console.log(response, gateWayPageUrl, "ssl comerce hitting")
+            console.log(gateWayPageUrl, "url gateway ")
+
         })
 
 
