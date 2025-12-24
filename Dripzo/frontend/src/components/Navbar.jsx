@@ -27,6 +27,7 @@ const Navbar = () => {
                         {
                             user && <>
                                 <li><NavLink to="dashboard">Dashboard</NavLink></li>
+                                <li><NavLink to="serve-as-rider">Serve As Rider</NavLink></li>
                             </>
                         }
 
@@ -42,6 +43,7 @@ const Navbar = () => {
                     {
                         user && <>
                             <li><NavLink to="dashboard">Dashboard</NavLink></li>
+                            <li><NavLink to="serve-as-rider">Serve As Rider</NavLink></li>
                         </>
                     }
 

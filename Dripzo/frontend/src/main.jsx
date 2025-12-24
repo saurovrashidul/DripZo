@@ -1,7 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
-// import App from './App.jsx'
 import { createBrowserRouter, RouterProvider } from 'react-router';
 import RootLayout from './layout/RootLayout';
 import Home from './pages/Home/Home';
@@ -9,7 +8,6 @@ import Login from './pages/Authentication/Login';
 import Register from './pages/Authentication/Register';
 import AuthProvider from './contexts/AuthProvider';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-// import PrivateRoute from './route/PrivateRoute';
 import SendParcel from './pages/SendParcel/SendParcel';
 import ServiceLocations from './pages/ServiceLocations';
 import Dashboard from './pages/Dashboard/Dashboard';
@@ -19,6 +17,8 @@ import Payment from './pages/Dashboard/Payment';
 import PaymentSuccess from './pages/Dashboard/PaymentSuccess';
 import PaymentFail from './pages/Dashboard/PaymentFail';
 import PaymentHistory from './pages/Dashboard/PaymentHistory';
+import ServeAsRider from './pages/ServeAsRider';
+
 
 
 
@@ -47,7 +47,15 @@ const router = createBrowserRouter([
           const res = await fetch("/data/warehouses.json");
           return res.json();
         }
-      }
+      },
+      {
+        path: "serve-as-rider",
+        element: <PrivateRoute><ServeAsRider></ServeAsRider></PrivateRoute>,
+        loader: async () => {
+          const res = await fetch("/data/warehouses.json");
+          return res.json();
+        }
+      },
     ],
   },
 
@@ -74,9 +82,12 @@ const router = createBrowserRouter([
       {
         path: "payment-history",
         element: <PaymentHistory></PaymentHistory>
-      }
+      },
     ]
   },
+
+
+
 
   {
     path: "/login",
