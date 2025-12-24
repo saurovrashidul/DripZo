@@ -21,6 +21,7 @@ const Dashboard = () => {
                     <Logo />
                     <li><NavLink to="/">Home</NavLink></li>
                     <li><NavLink to="/dashboard/myparcel">My Parcel</NavLink></li>
+                    <li><NavLink to="/dashboard/payment-history">Payment History</NavLink></li>
                 </ul>
 
             </div>

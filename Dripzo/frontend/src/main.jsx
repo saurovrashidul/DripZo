@@ -16,6 +16,9 @@ import Dashboard from './pages/Dashboard/Dashboard';
 import MyParcelList from './pages/Dashboard/MyParcelList';
 import PrivateRoute from './route/PrivateRoute';
 import Payment from './pages/Dashboard/Payment';
+import PaymentSuccess from './pages/Dashboard/PaymentSuccess';
+import PaymentFail from './pages/Dashboard/PaymentFail';
+import PaymentHistory from './pages/Dashboard/PaymentHistory';
 
 
 
@@ -57,8 +60,20 @@ const router = createBrowserRouter([
         element: <MyParcelList></MyParcelList>
       },
       {
-        path: "/dashboard/payment/:id",
+        path: "payment/:id",
         element: <Payment></Payment>
+      },
+      {
+        path: "payment-success",
+        element: <PaymentSuccess></PaymentSuccess>
+      },
+      {
+        path: "payment-fail",
+        element: <PaymentFail></PaymentFail>
+      },
+      {
+        path: "payment-history",
+        element: <PaymentHistory></PaymentHistory>
       }
     ]
   },
@@ -85,7 +100,7 @@ createRoot(document.getElementById('root')).render(
       <AuthProvider>
         <QueryClientProvider client={queryClient}>
           <RouterProvider router={router} />
-        </QueryClientProvider>F
+        </QueryClientProvider>
       </AuthProvider>
     </div>
   </StrictMode>,

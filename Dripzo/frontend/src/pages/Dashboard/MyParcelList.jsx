@@ -68,82 +68,7 @@ const MyParcelList = () => {
 
 
     return (
-        // <div className="p-6 w-full">
 
-        //     <h2 className="text-2xl font-bold mb-4">My Parcels</h2>
-
-        //     {parcels.length === 0 && <p>No parcels found</p>}
-
-        //     <div className="overflow-x-auto">
-        //         <table className="table table-zebra w-full">
-        //             <thead>
-        //                 <tr>
-        //                     <th>#</th>
-
-        //                     <th>Type</th>
-        //                     <th>Cost</th>
-        //                     <th>Payment</th>
-        //                     <th>Status</th>
-        //                     <th>Date</th>
-        //                     <th>Actions</th>
-        //                 </tr>
-        //             </thead>
-
-        //             <tbody>
-        //                 {parcels.map((parcel, index) => (
-        //                     <tr key={parcel._id}>
-        //                         <td>{index + 1}</td>
-        //                         <td>{parcel.type}</td>
-        //                         <td>৳{parcel.totalCost}</td>
-
-        //                         {/* Payment Status */}
-        //                         <td>
-        //                             {parcel.paymentStatus === "paid" ? (
-        //                                 <span className="badge badge-success">Paid</span>
-        //                             ) : (
-        //                                 <span className="badge badge-warning">Unpaid</span>
-        //                             )}
-        //                         </td>
-
-        //                         {/* Delivery Status */}
-        //                         <td>
-        //                             <span className="badge badge-info">
-        //                                 {parcel.status || "Pending"}
-        //                             </span>
-        //                         </td>
-
-        //                         <td>{parcel.submissionDateTime}</td>
-
-        //                         {/* Action Buttons */}
-        //                         <td className="space-x-1">
-        //                             {/* View */}
-        //                             <button className="btn btn-xs btn-info">
-        //                                 View
-        //                             </button>
-
-        //                             {/* Pay */}
-        //                             {parcel.paymentStatus !== "paid" && (
-        //                                 <button className="btn btn-xs btn-success">
-        //                                     Pay
-        //                                 </button>
-        //                             )}
-
-        //                             {/* Delete */}
-        //                             <button
-        //                                 className="btn btn-xs btn-error"
-        //                                 onClick={() => handleDelete(parcel._id)}
-        //                             >
-        //                                 Delete
-        //                             </button>
-
-        //                         </td>
-        //                     </tr>
-        //                 ))}
-        //             </tbody>
-
-        //         </table>
-        //     </div>
-        // </div>
 
         <div className="p-3 md:p-6 w-full">
             <h2 className="text-2xl font-bold mb-4">My Parcels</h2>
@@ -187,7 +112,7 @@ const MyParcelList = () => {
                                 {parcel.paymentStatus !== "paid" && (
                                     <button
                                         className="btn btn-xs btn-success"
-                                        onClick={() => navigate(`/dashboard/pay/${parcel._id}`)}
+                                        onClick={() => navigate(`/dashboard/payment/${parcel._id}`)}
                                     >
                                         Pay
                                     </button>
