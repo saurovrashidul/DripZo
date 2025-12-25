@@ -172,7 +172,7 @@ const MyParcelList = () => {
                                 <td className="space-x-1">
                                     <button className="btn btn-xs btn-info">View</button>
 
-                                    {parcel.paymentStatus !== "paid" && (
+                                    {/* {parcel.paymentStatus !== "paid" && (
                                         <button
                                             className="btn btn-xs btn-success"
                                             onClick={() => navigate(`/dashboard/payment/${parcel._id}`)}
@@ -180,7 +180,23 @@ const MyParcelList = () => {
                                             Pay
                                         </button>
 
-                                    )}
+                                    )} */}
+
+                                    <button
+                                        className={`btn btn-xs ${parcel.paymentStatus === "paid"
+                                                ? "btn-disabled btn-success"
+                                                : "btn-success"
+                                            }`}
+                                        disabled={parcel.paymentStatus === "paid"}
+                                        onClick={() => {
+                                            if (parcel.paymentStatus !== "paid") {
+                                                navigate(`/dashboard/payment/${parcel._id}`);
+                                            }
+                                        }}
+                                    >
+                                        {parcel.paymentStatus === "paid" ? "Paid" : "Pay"}
+                                    </button>
+
 
                                     <button
                                         className="btn btn-xs btn-error"

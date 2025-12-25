@@ -1,10 +1,17 @@
 import { useForm } from "react-hook-form";
 import { useLoaderData } from "react-router";
-// import { useState } from "react";
+import useAuth from "../contexts/useAuth";
+import { useEffect} from "react";
+import useAxiosSecure from "../hooks/useAxiosSecure";
+import Swal from "sweetalert2";
+
 
 const ServeAsRider = () => {
-    const warehouses = useLoaderData(); // from route loader
-    // const [selectedDistrict, setSelectedDistrict] = useState("");
+    const { user } = useAuth();
+    const warehouses = useLoaderData();
+    const axiosSecure = useAxiosSecure()
+
+
 
     const {
         register,
@@ -12,7 +19,26 @@ const ServeAsRider = () => {
         watch,
         reset,
         formState: { errors },
-    } = useForm();
+    } = useForm({
+        defaultValues: {
+            name: user?.displayName || "",
+            email: user?.email || "",
+        },
+    });
+
+    useEffect(() => {
+        if (user) {
+            reset({
+                name: user.displayName || "",
+                email: user.email || "",
+            });
+        }
+    }, [user, reset]);
+
+
+    ;
+
+
 
     const districtValue = watch("district");
 
@@ -20,11 +46,34 @@ const ServeAsRider = () => {
         warehouses?.find((item) => item.district === districtValue)
             ?.covered_area || [];
 
-    const onSubmit = (data) => {
-        console.log("Rider Application Data:", data);
-        // send data to backend
-        reset();
+    // const onSubmit = (data) => {
+    //     console.log("Rider Application Data:", data);
+    //     // send data to backend
+    //     reset();
+    // };
+
+    const onSubmit = async (data) => {
+        try {
+            const response = await axiosSecure.post("/riders", data);
+
+            if (response.data.insertedId) {
+                Swal.fire({
+                    icon: "success",
+                    title: "Application Submitted",
+                    text: "Your rider application is under review",
+                });
+                reset();
+            }
+        } catch (error) {
+            Swal.fire({
+                icon: "error",
+                title: "Submission Failed",
+                text: error?.response?.data?.message || "You cannot submit multiple applications",
+            });
+        }
     };
+
+
 
     return (
         <div className="max-w-2xl mx-auto p-6 bg-white shadow rounded">
@@ -161,6 +210,10 @@ const ServeAsRider = () => {
                 <button type="submit" className="btn btn-primary w-full">
                     Submit Rider Application
                 </button>
+
+
+
+
             </form>
         </div>
     );

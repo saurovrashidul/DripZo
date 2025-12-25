@@ -18,6 +18,7 @@ import PaymentSuccess from './pages/Dashboard/PaymentSuccess';
 import PaymentFail from './pages/Dashboard/PaymentFail';
 import PaymentHistory from './pages/Dashboard/PaymentHistory';
 import ServeAsRider from './pages/ServeAsRider';
+import PendingRiders from './pages/Dashboard/PendingRiders';
 
 
 
@@ -55,6 +56,7 @@ const router = createBrowserRouter([
           const res = await fetch("/data/warehouses.json");
           return res.json();
         }
+
       },
     ],
   },
@@ -82,6 +84,10 @@ const router = createBrowserRouter([
       {
         path: "payment-history",
         element: <PaymentHistory></PaymentHistory>
+      },
+      {
+        path: "pending-riders",
+        element: <PendingRiders></PendingRiders>
       },
     ]
   },

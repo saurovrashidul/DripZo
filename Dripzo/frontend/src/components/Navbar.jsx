@@ -55,19 +55,26 @@ const Navbar = () => {
                 {loading ? loading : user ? (
                     <button
                         onClick={logout}
-                        className="px-5 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
+                        className="px-4 py-2 border border-black bg-black text-white
+             hover:bg-white hover:text-black
+             transition duration-200"
                     >
-                        Logout
+                        <p className='text-[15px]'>Logout</p>
                     </button>
+
                 ) : (
                     <>
                         <NavLink to="/login">
-                            <button className="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                            <button className="mr-2 px-4 py-2 border border-black bg-black text-white
+             hover:bg-white hover:text-black
+             transition duration-200">
                                 Login
                             </button>
                         </NavLink>
                         <NavLink to="/register">
-                            <button className="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                            <button className="px-4 py-2 border border-black bg-black text-white
+             hover:bg-white hover:text-black
+             transition duration-200">
                                 Register
                             </button>
                         </NavLink>

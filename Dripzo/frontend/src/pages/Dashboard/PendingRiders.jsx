@@ -1,0 +1,241 @@
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
+import Swal from "sweetalert2";
+
+const PendingRiders = () => {
+  const axiosSecure = useAxiosSecure();
+  const queryClient = useQueryClient();
+  const [selectedRider, setSelectedRider] = useState(null);
+
+  // Fetch pending riders
+  const { data: riders = [], isLoading, isError } = useQuery({
+    queryKey: ["pendingRiders"],
+    queryFn: async () => {
+      const res = await axiosSecure.get("/riders");
+      return res.data;
+    },
+  });
+
+  // Approve / Reject mutation
+  const mutation = useMutation({
+    mutationFn: async ({ id, status }) => {
+      const res = await axiosSecure.patch(`/riders/${id}`, { status });
+      return res.data;
+    },
+    onSuccess: (_, variables) => {
+      Swal.fire(
+        "Success",
+        `Rider ${variables.status} successfully`,
+        "success"
+      );
+      queryClient.invalidateQueries({ queryKey: ["pendingRiders"] });
+      setSelectedRider(null);
+    },
+    onError: () => {
+      Swal.fire("Error", "Failed to update status", "error");
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: async (id) => {
+      const res = await axiosSecure.delete(`/riders/${id}`);
+      return res.data;
+    },
+    onSuccess: () => {
+      Swal.fire("Rejected", "Rider application rejected", "success");
+      queryClient.invalidateQueries({ queryKey: ["pendingRiders"] });
+      setSelectedRider(null);
+    },
+    onError: () => {
+      Swal.fire("Error", "Failed to reject rider", "error");
+    },
+  });
+
+
+
+  // const handleStatusChange = (id, status) => {
+  //   Swal.fire({
+  //     title: "Are you sure?",
+  //     text: `Do you want to ${status} this rider?`,
+  //     icon: "warning",
+  //     showCancelButton: true,
+  //     confirmButtonColor: status === "approved" ? "#16a34a" : "#dc2626",
+  //     cancelButtonColor: "#6b7280",
+  //     confirmButtonText: `Yes, ${status}`,
+  //   }).then((result) => {
+  //     if (result.isConfirmed) {
+  //       mutation.mutate({ id, status });
+  //     }
+  //   });
+  // };
+
+  const handleStatusChange = (id, status) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text:
+        status === "approved"
+          ? "Do you want to approve this rider?"
+          : "This will permanently delete the rider application!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: status === "approved" ? "#16a34a" : "#dc2626",
+      cancelButtonColor: "#6b7280",
+      confirmButtonText:
+        status === "approved" ? "Yes, approve" : "Yes, reject",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        if (status === "approved") {
+          mutation.mutate({ id, status });
+        } else {
+          deleteMutation.mutate(id); 
+        }
+      }
+    });
+  };
+
+
+
+  if (isLoading) return <p className="text-center">Loading...</p>;
+  if (isError) return <p className="text-center text-red-500">Failed to load riders</p>;
+
+  return (
+    <div className="p-6">
+      <h2 className="text-2xl font-bold mb-4">Pending Riders</h2>
+
+      {riders.length === 0 ? (
+        <p>No pending riders</p>
+      ) : (
+        // <div className="overflow-x-auto">
+        //   <table className="table table-zebra w-full">
+        //     <thead>
+        //       <tr>
+        //         <th>Name</th>
+        //         <th>Email</th>
+        //         <th>Status</th>
+        //         <th>View</th>
+        //         <th>Action</th>
+        //       </tr>
+        //     </thead>
+        //     <tbody>
+        //       {riders.map((rider) => (
+        //         <tr key={rider._id}>
+        //           <td>{rider.name}</td>
+        //           <td>{rider.email}</td>
+        //           <td className="capitalize">{rider.status}</td>
+        //           <td>
+        //             <button
+        //               className="btn btn-sm btn-info"
+        //               onClick={() => setSelectedRider(rider)}
+        //             >
+        //               View
+        //             </button>
+        //           </td>
+        //           <td className="space-x-2">
+        //             <button
+        //               className="btn btn-sm btn-success"
+        //               onClick={() =>
+        //                 mutation.mutate({ id: rider._id, status: "approved" })
+        //               }
+        //             >
+        //               Approve
+        //             </button>
+        //             <button
+        //               className="btn btn-sm btn-error"
+        //               onClick={() =>
+        //                 mutation.mutate({ id: rider._id, status: "rejected" })
+        //               }
+        //             >
+        //               Reject
+        //             </button>
+        //           </td>
+        //         </tr>
+        //       ))}
+        //     </tbody>
+        //   </table>
+        // </div>
+
+        <div className="overflow-x-auto">
+          <table className="table table-zebra w-full">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th className="text-center">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {riders.map((rider) => (
+                <tr key={rider._id}>
+                  <td>{rider.name}</td>
+                  <td>{rider.email}</td>
+                  <td className="capitalize">{rider.status}</td>
+                  <td className="space-x-2">
+                    <button
+                      className="btn btn-sm btn-info"
+                      onClick={() => setSelectedRider(rider)}
+                    >
+                      Details
+                    </button>
+
+                    <button
+                      className="btn btn-sm btn-success"
+                      onClick={() => handleStatusChange(rider._id, "approved")}
+
+                    >
+                      Approve
+                    </button>
+
+                    <button
+                      className="btn btn-sm btn-error"
+                      onClick={() => handleStatusChange(rider._id, "rejected")}
+
+                    >
+                      Reject
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+      )}
+
+      {/* -------- Modal -------- */}
+      {selectedRider && (
+        <dialog className="modal modal-open">
+          <div className="modal-box">
+            <h3 className="font-bold text-lg mb-3">Rider Details</h3>
+
+            <div className="space-y-2 text-sm">
+              <p><strong>Name:</strong> {selectedRider.name}</p>
+              <p><strong>Email:</strong> {selectedRider.email}</p>
+              <p><strong>Phone:</strong> {selectedRider.phone}</p>
+              <p><strong>NID:</strong> {selectedRider.nid}</p>
+              <p><strong>District:</strong> {selectedRider.district}</p>
+              <p><strong>Service Center:</strong> {selectedRider.serviceCenter}</p>
+              <p><strong>Vehicle Type:</strong> {selectedRider.vehicleType}</p>
+              <p><strong>Vehicle Number:</strong> {selectedRider.vehicleNumber}</p>
+              <p><strong>Registration Number:</strong> {selectedRider.registrationNumber}</p>
+              <p><strong>Address:</strong> {selectedRider.address}</p>
+              <p><strong>Status:</strong> {selectedRider.status}</p>
+            </div>
+
+            <div className="modal-action">
+              <button
+                className="btn"
+                onClick={() => setSelectedRider(null)}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </dialog>
+      )}
+    </div>
+  );
+};
+
+export default PendingRiders;
