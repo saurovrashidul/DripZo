@@ -1,6 +1,7 @@
 import React from 'react';
 import useAuth from '../contexts/useAuth';
 import { useLocation, useNavigate } from 'react-router';
+import useAxiosSecure from '../hooks/useAxiosSecure';
 
 
 const SocialLogin = () => {
@@ -9,21 +10,42 @@ const SocialLogin = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const from = location.state?.from || "/";
+    const axiosSecure = useAxiosSecure()
+
+    // const handleGoogleSIgnIn = () => {
+    //     signInGoogle()
+    //         .then((result) => {
+
+    //             const user = result.user;
+    //             console.log(user)
+
+    //             navigate(from, { replace: true });
+
+    //         }).catch((error) => {
+    //             console.log(error)
+
+    //         });
+
+    // }
 
     const handleGoogleSIgnIn = () => {
         signInGoogle()
-            .then((result) => {
-
+            .then(async (result) => {
                 const user = result.user;
-                console.log(user)
+
+                // save or update user in database
+                await axiosSecure.post("/users", {
+                    name: user.displayName,
+                    email: user.email,
+                });
+
                 navigate(from, { replace: true });
-
-            }).catch((error) => {
-                console.log(error)
-
+            })
+            .catch((error) => {
+                console.log(error);
             });
+    };
 
-    }
 
     return (
 

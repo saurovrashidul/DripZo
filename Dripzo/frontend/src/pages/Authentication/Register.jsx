@@ -3,23 +3,42 @@ import { NavLink } from "react-router";
 import useAuth from "../../contexts/useAuth";
 import SocialLogin from "../../SocialLogin/SocialLogin";
 import Logo from "../../components/Logo/logo";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 export default function Register() {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const { createUser } = useAuth();
+  const axiosSecure=useAxiosSecure()
 
+  // const onSubmit = (data) => {
+  //   const { email, password } = data;
+
+  //   createUser(email, password)
+  //     .then((userCredential) => {
+  //       const user = userCredential.user;
+  //       console.log("Registered User:", user);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // };
   const onSubmit = (data) => {
-    const { email, password } = data;
+  const { name, email, password } = data;
 
-    createUser(email, password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        console.log("Registered User:", user);
-      })
-      .catch((error) => {
-        console.log(error);
+  createUser(email, password)
+    .then((userCredential) => {
+      const user = userCredential.user;
+
+      axiosSecure.post("/users", {
+        name,
+        email: user.email,
       });
-  };
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
+
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-4">
