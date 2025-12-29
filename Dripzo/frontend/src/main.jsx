@@ -19,6 +19,7 @@ import PaymentFail from './pages/Dashboard/PaymentFail';
 import PaymentHistory from './pages/Dashboard/PaymentHistory';
 import ServeAsRider from './pages/ServeAsRider';
 import PendingRiders from './pages/Dashboard/PendingRiders';
+import ActiveRiders from './pages/Dashboard/ActiveRiders';
 
 
 
@@ -89,6 +90,11 @@ const router = createBrowserRouter([
         path: "pending-riders",
         element: <PendingRiders></PendingRiders>
       },
+      {
+        path: "active-riders",
+        element: <ActiveRiders />
+      }
+
     ]
   },
 

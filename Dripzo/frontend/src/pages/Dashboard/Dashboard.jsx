@@ -1,10 +1,10 @@
 import React from 'react';
 import { NavLink, Outlet } from 'react-router';
-import Logo from '../../components/Logo/logo';
+import { FiHome, FiPackage, FiCreditCard, FiUsers, FiUserCheck } from 'react-icons/fi';
 
 const Dashboard = () => {
     return (
-        <div className="drawer lg:drawer-open ">
+        <div className="drawer  lg:drawer-open ">
             <input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
             <div className="drawer-content flex flex-col items-center justify-center">
                 {/* Page content here */}
@@ -14,16 +14,36 @@ const Dashboard = () => {
                 </label>
 
             </div>
-            <div className="drawer-side ">
+            <div className="drawer-side bg-gray-700">
                 <label htmlFor="my-drawer-3" aria-label="close sidebar" className="drawer-overlay"></label>
-                <ul className="menu bg-base-200 min-h-full w-80 p-4">
-                    {/* Sidebar content here */}
-                    <Logo />
-                    <li><NavLink to="/">Home</NavLink></li>
-                    <li><NavLink to="/dashboard/myparcel">My Parcel</NavLink></li>
-                    <li><NavLink to="/dashboard/payment-history">Payment History</NavLink></li>
-                    <li><NavLink to="/dashboard/pending-riders">Pending Riders</NavLink></li>
+                <ul className="menu min-h-full w-70 p-3">
+                    <li className='text-white  gap-2'>
+                        <NavLink to="/">
+                            <FiHome /> Home
+                        </NavLink>
+                    </li>
+                    <li className='text-white  gap-2'>
+                        <NavLink to="/dashboard/myparcel">
+                            <FiPackage /> My Parcel
+                        </NavLink>
+                    </li>
+                    <li className='text-white  gap-2'>
+                        <NavLink to="/dashboard/payment-history">
+                            <FiCreditCard /> Payment History
+                        </NavLink>
+                    </li>
+                    <li className='text-white  gap-2'>
+                        <NavLink to="/dashboard/pending-riders">
+                            <FiUsers /> Pending Riders
+                        </NavLink>
+                    </li>
+                    <li className='text-white  gap-2'>
+                        <NavLink to="/dashboard/active-riders">
+                            <FiUserCheck /> Active Riders
+                        </NavLink>
+                    </li>
                 </ul>
+
 
             </div>
 

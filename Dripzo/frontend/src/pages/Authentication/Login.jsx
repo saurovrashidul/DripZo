@@ -80,7 +80,7 @@ export default function Login() {
           </button>
 
           <div className="mx-auto text-center">
-            Don't have an account? <NavLink to="/register" className="hover:text-blue-600 transition-colors duration-200">Register</NavLink>
+            Don't have an account? <NavLink to="/register"   state={{ from: location.state?.from }} className="hover:text-blue-600 transition-colors duration-200">Register</NavLink>
           </div>
 
         </form>

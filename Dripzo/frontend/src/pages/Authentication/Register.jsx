@@ -1,14 +1,20 @@
 import { useForm } from "react-hook-form";
-import { NavLink } from "react-router"; 
+import { NavLink } from "react-router";
 import useAuth from "../../contexts/useAuth";
 import SocialLogin from "../../SocialLogin/SocialLogin";
 import Logo from "../../components/Logo/logo";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
+import { useNavigate, useLocation } from "react-router";
+
 
 export default function Register() {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const { createUser } = useAuth();
-  const axiosSecure=useAxiosSecure()
+  const axiosSecure = useAxiosSecure()
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from || "/";
+
 
   // const onSubmit = (data) => {
   //   const { email, password } = data;
@@ -23,21 +29,25 @@ export default function Register() {
   //     });
   // };
   const onSubmit = (data) => {
-  const { name, email, password } = data;
+    const { name, email, password } = data;
 
-  createUser(email, password)
-    .then((userCredential) => {
-      const user = userCredential.user;
+    createUser(email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
 
-      axiosSecure.post("/users", {
-        name,
-        email: user.email,
+        axiosSecure.post("/users", {
+          name,
+          email: user.email,
+        });
+
+        navigate(from, { replace: true });
+      })
+
+
+      .catch((error) => {
+        console.log(error);
       });
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-};
+  };
 
 
   return (

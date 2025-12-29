@@ -37,35 +37,45 @@ const PendingRiders = () => {
     },
   });
 
-  const deleteMutation = useMutation({
-    mutationFn: async (id) => {
-      const res = await axiosSecure.delete(`/riders/${id}`);
-      return res.data;
-    },
-    onSuccess: () => {
-      Swal.fire("Rejected", "Rider application rejected", "success");
-      queryClient.invalidateQueries({ queryKey: ["pendingRiders"] });
-      setSelectedRider(null);
-    },
-    onError: () => {
-      Swal.fire("Error", "Failed to reject rider", "error");
-    },
-  });
+  // const deleteMutation = useMutation({
+  //   mutationFn: async (id) => {
+  //     const res = await axiosSecure.delete(`/riders/${id}`);
+  //     return res.data;
+  //   },
+  //   onSuccess: () => {
+  //     Swal.fire("Rejected", "Rider application rejected", "success");
+  //     queryClient.invalidateQueries({ queryKey: ["pendingRiders"] });
+  //     setSelectedRider(null);
+  //   },
+  //   onError: () => {
+  //     Swal.fire("Error", "Failed to reject rider", "error");
+  //   },
+  // });
+
+
 
 
 
   // const handleStatusChange = (id, status) => {
   //   Swal.fire({
   //     title: "Are you sure?",
-  //     text: `Do you want to ${status} this rider?`,
+  //     text:
+  //       status === "approved"
+  //         ? "Do you want to approve this rider?"
+  //         : "This will permanently delete the rider application!",
   //     icon: "warning",
   //     showCancelButton: true,
   //     confirmButtonColor: status === "approved" ? "#16a34a" : "#dc2626",
   //     cancelButtonColor: "#6b7280",
-  //     confirmButtonText: `Yes, ${status}`,
+  //     confirmButtonText:
+  //       status === "approved" ? "Yes, approve" : "Yes, reject",
   //   }).then((result) => {
   //     if (result.isConfirmed) {
-  //       mutation.mutate({ id, status });
+  //       if (status === "approved") {
+  //         mutation.mutate({ id, status });
+  //       } else {
+  //         deleteMutation.mutate(id); 
+  //       }
   //     }
   //   });
   // };
@@ -76,7 +86,7 @@ const PendingRiders = () => {
       text:
         status === "approved"
           ? "Do you want to approve this rider?"
-          : "This will permanently delete the rider application!",
+          : "Do you want to reject this rider?",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: status === "approved" ? "#16a34a" : "#dc2626",
@@ -85,15 +95,10 @@ const PendingRiders = () => {
         status === "approved" ? "Yes, approve" : "Yes, reject",
     }).then((result) => {
       if (result.isConfirmed) {
-        if (status === "approved") {
-          mutation.mutate({ id, status });
-        } else {
-          deleteMutation.mutate(id); 
-        }
+        mutation.mutate({ id, status });
       }
     });
   };
-
 
 
   if (isLoading) return <p className="text-center">Loading...</p>;
@@ -101,59 +106,12 @@ const PendingRiders = () => {
 
   return (
     <div className="p-6">
-      <h2 className="text-2xl font-bold mb-4">Pending Riders</h2>
+      <h2 className="text-2xl text-center font-bold mb-4">Pending Riders</h2>
 
       {riders.length === 0 ? (
         <p>No pending riders</p>
       ) : (
-        // <div className="overflow-x-auto">
-        //   <table className="table table-zebra w-full">
-        //     <thead>
-        //       <tr>
-        //         <th>Name</th>
-        //         <th>Email</th>
-        //         <th>Status</th>
-        //         <th>View</th>
-        //         <th>Action</th>
-        //       </tr>
-        //     </thead>
-        //     <tbody>
-        //       {riders.map((rider) => (
-        //         <tr key={rider._id}>
-        //           <td>{rider.name}</td>
-        //           <td>{rider.email}</td>
-        //           <td className="capitalize">{rider.status}</td>
-        //           <td>
-        //             <button
-        //               className="btn btn-sm btn-info"
-        //               onClick={() => setSelectedRider(rider)}
-        //             >
-        //               View
-        //             </button>
-        //           </td>
-        //           <td className="space-x-2">
-        //             <button
-        //               className="btn btn-sm btn-success"
-        //               onClick={() =>
-        //                 mutation.mutate({ id: rider._id, status: "approved" })
-        //               }
-        //             >
-        //               Approve
-        //             </button>
-        //             <button
-        //               className="btn btn-sm btn-error"
-        //               onClick={() =>
-        //                 mutation.mutate({ id: rider._id, status: "rejected" })
-        //               }
-        //             >
-        //               Reject
-        //             </button>
-        //           </td>
-        //         </tr>
-        //       ))}
-        //     </tbody>
-        //   </table>
-        // </div>
+
 
         <div className="overflow-x-auto">
           <table className="table table-zebra w-full">
@@ -162,6 +120,7 @@ const PendingRiders = () => {
                 <th>Name</th>
                 <th>Email</th>
                 <th>Status</th>
+                <th>Applied On</th>
                 <th className="text-center">Action</th>
               </tr>
             </thead>
@@ -171,6 +130,9 @@ const PendingRiders = () => {
                   <td>{rider.name}</td>
                   <td>{rider.email}</td>
                   <td className="capitalize">{rider.status}</td>
+                  <td>
+                    {new Date(rider.createdAt).toLocaleDateString()}
+                  </td>
                   <td className="space-x-2">
                     <button
                       className="btn btn-sm btn-info"
