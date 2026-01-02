@@ -106,7 +106,7 @@ const PendingRiders = () => {
 
   return (
     <div className="p-6">
-      <h2 className="text-2xl text-center font-bold mb-4">Pending Riders</h2>
+      <h2 className="text-2xl text-center font-bold mb-4">Pending Riders ({riders.length})</h2>
 
       {riders.length === 0 ? (
         <p>No pending riders</p>

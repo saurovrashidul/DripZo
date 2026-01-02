@@ -20,6 +20,10 @@ import PaymentHistory from './pages/Dashboard/PaymentHistory';
 import ServeAsRider from './pages/ServeAsRider';
 import PendingRiders from './pages/Dashboard/PendingRiders';
 import ActiveRiders from './pages/Dashboard/ActiveRiders';
+import AssignAdminRole from './pages/Dashboard/AssignAdminRole';
+import AdminRoute from './route/AdminRoute';
+import Forbidden from './pages/Forbidden/Forbidden';
+import AssignRider from './pages/Dashboard/AssignRider';
 
 
 
@@ -88,12 +92,20 @@ const router = createBrowserRouter([
       },
       {
         path: "pending-riders",
-        element: <PendingRiders></PendingRiders>
+        element: <AdminRoute><PendingRiders></PendingRiders></AdminRoute>
       },
       {
         path: "active-riders",
-        element: <ActiveRiders />
-      }
+        element: <AdminRoute><ActiveRiders /></AdminRoute>
+      },
+      {
+        path: "assign-admin",
+        element: <AdminRoute><AssignAdminRole /></AdminRoute>
+      },
+      {
+        path: "assign-rider",
+        element: <AdminRoute><AssignRider/></AdminRoute>
+      },
 
     ]
   },
@@ -109,6 +121,10 @@ const router = createBrowserRouter([
   {
     path: "/register",
     Component: Register
+  },
+  {
+    path: "/forbidden",
+    Component: Forbidden
   },
 
 

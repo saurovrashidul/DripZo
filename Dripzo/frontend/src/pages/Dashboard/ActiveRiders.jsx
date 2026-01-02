@@ -2,15 +2,43 @@ import { useEffect, useState } from "react";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 const ActiveRiders = () => {
+   
     const axiosSecure = useAxiosSecure();
     const [riders, setRiders] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        axiosSecure.get("/riders/approved")
-            .then(res => {
-                setRiders(res.data);
-            });
+        let isMounted = true; // prevent state update if component unmounted
+        const fetchRiders = async () => {
+            try {
+                const res = await axiosSecure.get("/riders/approved");
+                if (isMounted) setRiders(res.data);
+            } catch (error) {
+                console.error(error);
+            } finally {
+                if (isMounted) setLoading(false);
+            }
+        };
+
+        fetchRiders();
+
+        return () => {
+            isMounted = false;
+        };
     }, [axiosSecure]);
+
+
+
+
+
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center min-h-[200px]">
+                <span className="loading loading-spinner loading-lg"></span>
+            </div>
+        );
+    }
+
 
     return (
         <div>

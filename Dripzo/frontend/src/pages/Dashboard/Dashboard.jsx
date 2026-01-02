@@ -1,8 +1,12 @@
 import React from 'react';
 import { NavLink, Outlet } from 'react-router';
-import { FiHome, FiPackage, FiCreditCard, FiUsers, FiUserCheck } from 'react-icons/fi';
+import { FiHome, FiPackage, FiCreditCard, FiUsers, FiUserCheck, FiUserPlus } from 'react-icons/fi';
+import useAdmin from '../../hooks/useAdmin';
 
 const Dashboard = () => {
+
+    const [isAdmin] = useAdmin()
+
     return (
         <div className="drawer  lg:drawer-open ">
             <input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
@@ -32,16 +36,35 @@ const Dashboard = () => {
                             <FiCreditCard /> Payment History
                         </NavLink>
                     </li>
-                    <li className='text-white  gap-2'>
-                        <NavLink to="/dashboard/pending-riders">
-                            <FiUsers /> Pending Riders
-                        </NavLink>
-                    </li>
-                    <li className='text-white  gap-2'>
-                        <NavLink to="/dashboard/active-riders">
-                            <FiUserCheck /> Active Riders
-                        </NavLink>
-                    </li>
+                    {
+                        isAdmin && (<>
+
+
+                            <li className='text-white  gap-2'>
+                                <NavLink to="/dashboard/pending-riders">
+                                    <FiUsers /> Pending Riders
+                                </NavLink>
+                            </li>
+                            <li className='text-white  gap-2'>
+                                <NavLink to="/dashboard/active-riders">
+                                    <FiUserCheck /> Active Riders
+                                </NavLink>
+                            </li>
+                            <li className='text-white  gap-2'>
+                                <NavLink to="/dashboard/assign-admin">
+                                    <FiUserPlus /> Assign Admin Role
+
+                                </NavLink>
+                            </li>
+                            <li className='text-white  gap-2'>
+                                <NavLink to="/dashboard/assign-rider">
+                                    <FiUserPlus /> Assign Rider
+
+                                </NavLink>
+                            </li>
+                        </>)
+                    }
+
                 </ul>
 
 

@@ -71,7 +71,7 @@ const MyParcelList = () => {
 
 
         <div className="p-3 md:p-6 w-full">
-            <h2 className="text-2xl font-bold mb-4 text-center">My Parcels</h2>
+            <h2 className="text-2xl font-bold mb-4 text-center">My Parcels ({parcels.length})</h2>
 
             {parcels.length === 0 && <p>No parcels found</p>}
 

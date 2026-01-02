@@ -4,12 +4,14 @@ import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndP
 import { GoogleAuthProvider } from "firebase/auth";
 import { auth } from '../Firebase/firebase.init';
 
+
 const provider = new GoogleAuthProvider();
 
 const AuthProvider = ({ children }) => {
 
 
     const [user, setUser] = useState(null);
+    
 
     // loading state
     const [loading, setLoading] = useState(true);
@@ -27,9 +29,9 @@ const AuthProvider = ({ children }) => {
     };
 
     // googleSignin
-    const signInGoogle=()=>{
-       setLoading(true)
-       return signInWithPopup(auth, provider)
+    const signInGoogle = () => {
+        setLoading(true)
+        return signInWithPopup(auth, provider)
     }
 
     // Logout
@@ -46,6 +48,23 @@ const AuthProvider = ({ children }) => {
 
         return () => unsubscribe();
     }, []);
+
+// useEffect(() => {
+//     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+//         setUser(currentUser);
+
+//         if (currentUser?.email) {
+//             await axiosSecure.post("/jwt", { email: currentUser.email });
+//         } else {
+//             await axiosSecure.post("/logout");
+//         }
+
+//         setLoading(false); // 🔑 auth finished
+//     });
+
+//     return () => unsubscribe();
+// }, []);
+
 
 
     const authInfo = {
