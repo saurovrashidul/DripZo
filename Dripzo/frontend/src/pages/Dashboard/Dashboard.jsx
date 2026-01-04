@@ -2,10 +2,12 @@ import React from 'react';
 import { NavLink, Outlet } from 'react-router';
 import { FiHome, FiPackage, FiCreditCard, FiUsers, FiUserCheck, FiUserPlus } from 'react-icons/fi';
 import useAdmin from '../../hooks/useAdmin';
+import useRider from '../../hooks/useRider';
 
 const Dashboard = () => {
 
     const [isAdmin] = useAdmin()
+    const [isRider] = useRider()
 
     return (
         <div className="drawer  lg:drawer-open ">
@@ -36,6 +38,21 @@ const Dashboard = () => {
                             <FiCreditCard /> Payment History
                         </NavLink>
                     </li>
+                    {isRider && (
+                        <>
+                            <li className='text-white  gap-2'>
+
+                                <NavLink to="/dashboard/pending-deliveries">
+                                    <FiUserPlus /> Pending Deliveries
+
+                                </NavLink>
+                            </li>
+                        </>
+                    )
+
+                    }
+
+
                     {
                         isAdmin && (<>
 
@@ -62,6 +79,7 @@ const Dashboard = () => {
 
                                 </NavLink>
                             </li>
+
                         </>)
                     }
 

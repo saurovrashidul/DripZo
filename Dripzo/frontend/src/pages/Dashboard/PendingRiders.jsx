@@ -12,7 +12,7 @@ const PendingRiders = () => {
   const { data: riders = [], isLoading, isError } = useQuery({
     queryKey: ["pendingRiders"],
     queryFn: async () => {
-      const res = await axiosSecure.get("/riders");
+      const res = await axiosSecure.get("/riders?status=pending");
       return res.data;
     },
   });
@@ -37,26 +37,12 @@ const PendingRiders = () => {
     },
   });
 
-  // const deleteMutation = useMutation({
-  //   mutationFn: async (id) => {
-  //     const res = await axiosSecure.delete(`/riders/${id}`);
-  //     return res.data;
-  //   },
-  //   onSuccess: () => {
-  //     Swal.fire("Rejected", "Rider application rejected", "success");
-  //     queryClient.invalidateQueries({ queryKey: ["pendingRiders"] });
-  //     setSelectedRider(null);
-  //   },
-  //   onError: () => {
-  //     Swal.fire("Error", "Failed to reject rider", "error");
-  //   },
-  // });
 
 
 
 
 
-  // const handleStatusChange = (id, status) => {
+ 
   //   Swal.fire({
   //     title: "Are you sure?",
   //     text:

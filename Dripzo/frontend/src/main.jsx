@@ -24,6 +24,8 @@ import AssignAdminRole from './pages/Dashboard/AssignAdminRole';
 import AdminRoute from './route/AdminRoute';
 import Forbidden from './pages/Forbidden/Forbidden';
 import AssignRider from './pages/Dashboard/AssignRider';
+import PendingDeliveries from './pages/Dashboard/PendingDeliveries';
+import RiderRoute from './route/RiderRoute';
 
 
 
@@ -105,6 +107,10 @@ const router = createBrowserRouter([
       {
         path: "assign-rider",
         element: <AdminRoute><AssignRider/></AdminRoute>
+      },
+      {
+        path: "pending-deliveries",
+        element: <RiderRoute><PendingDeliveries></PendingDeliveries></RiderRoute>
       },
 
     ]

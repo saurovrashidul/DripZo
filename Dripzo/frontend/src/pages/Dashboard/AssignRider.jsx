@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import Swal from "sweetalert2";
 
 const AssignRider = () => {
   const axiosSecure = useAxiosSecure();
   const [selectedParcel, setSelectedParcel] = useState(null);
+  const queryClient = useQueryClient();
 
   // 🔹 Fetch parcels
   const { data: parcels = [], isLoading } = useQuery({
@@ -15,6 +16,15 @@ const AssignRider = () => {
       return res.data;
     },
   });
+
+  // const { data: parcels = [], isLoading, refetch } = useQuery({
+  //   queryKey: ["parcels"],
+  //   queryFn: async () => {
+  //     const res = await axiosSecure.get("/parcels");
+  //     return res.data;
+  //   },
+  // });
+
 
   // 🔹 Fetch ONLY approved riders
   const { data: riders = [] } = useQuery({
@@ -31,24 +41,64 @@ const AssignRider = () => {
     (rider) => rider.district === selectedParcel?.senderRegion
   );
 
-  // 🔹 Assign rider handler
-  const handleAssignRider = async (rider) => {
-    try {
-      await axiosSecure.patch(
-        `/parcels/assign-rider/${selectedParcel._id}`,
-        {
-          riderId: rider._id,
-          riderName: rider.name,
-          riderPhone: rider.phone,
-        }
-      );
+  // const handleAssignRider = async (rider) => {
+  //   const confirm = await Swal.fire({
+  //     title: "Assign Rider?",
+  //     text: `${rider.name} will be assigned to ${selectedParcel.trackingID}`,
+  //     icon: "question",
+  //     showCancelButton: true,
+  //     confirmButtonText: "Yes, Assign",
+  //   });
 
-      Swal.fire("Success", "Rider assigned successfully", "success");
+  //   if (!confirm.isConfirmed) return;
+
+  //   try {
+  //     await axiosSecure.patch(
+  //       `/parcels/assign-rider/${selectedParcel._id}`,
+  //       { riderId: rider._id }
+  //     );
+
+  //     Swal.fire("Success", "Rider assigned successfully", "success");
+  //     setSelectedParcel(null);
+  //     refetch(); // 🔥 refresh parcels
+  //   } catch (error) {
+  //     console.log(error)
+  //     Swal.fire("Error", "Failed to assign rider", "error");
+  //   }
+  // };
+
+
+
+  const assignRiderMutation = useMutation({
+    mutationFn: async ({ parcelId, riderId }) => {
+      const res = await axiosSecure.patch(
+        `/parcels/${parcelId}/assign-rider`,
+        { riderId }
+      );
+      return res.data;
+    },
+    onSuccess: (data) => {
+      Swal.fire("Success", data.message, "success");
       setSelectedParcel(null);
-    } catch (error) {
+
+      // 🔄 refetch parcels after assignment
+      queryClient.invalidateQueries(["parcels"]);
+    },
+    onError: (error) => {
+      console.error(error);
       Swal.fire("Error", "Failed to assign rider", "error");
-    }
+    },
+  });
+
+  const handleAssignRider = (rider) => {
+    assignRiderMutation.mutate({
+      parcelId: selectedParcel._id,
+      riderId: rider._id,
+    });
   };
+
+
+
 
   if (isLoading) {
     return <p className="text-center mt-10">Loading parcels...</p>;
@@ -122,9 +172,11 @@ const AssignRider = () => {
                     <button
                       className="btn btn-sm btn-success"
                       onClick={() => handleAssignRider(rider)}
+                      disabled={assignRiderMutation.isLoading}
                     >
-                      Assign
+                      {assignRiderMutation.isLoading ? "Assigning..." : "Assign"}
                     </button>
+
                   </div>
                 ))}
               </div>
