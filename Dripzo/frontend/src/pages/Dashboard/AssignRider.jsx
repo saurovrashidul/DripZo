@@ -106,7 +106,7 @@ const AssignRider = () => {
 
   return (
     <div className="p-6">
-      <h2 className="text-2xl font-bold mb-4">Assign Rider</h2>
+      <h2 className="text-2xl font-bold mb-4 text-center">Assign Riders ({riders.length})</h2>
 
       {/* 🔹 Parcel Table */}
       <div className="overflow-x-auto">

@@ -26,6 +26,8 @@ import Forbidden from './pages/Forbidden/Forbidden';
 import AssignRider from './pages/Dashboard/AssignRider';
 import PendingDeliveries from './pages/Dashboard/PendingDeliveries';
 import RiderRoute from './route/RiderRoute';
+import MyDeliveries from './pages/Dashboard/MyDeliveries';
+import MyEarnings from './pages/Dashboard/MyEarnings';
 
 
 
@@ -48,24 +50,26 @@ const router = createBrowserRouter([
           return res.json();
         }
       },
-      {
-        path: "/sendparcel",
-        element: <PrivateRoute><SendParcel></SendParcel></PrivateRoute>,
-        loader: async () => {
-          const res = await fetch("/data/warehouses.json");
-          return res.json();
-        }
-      },
-      {
-        path: "serve-as-rider",
-        element: <PrivateRoute><ServeAsRider></ServeAsRider></PrivateRoute>,
-        loader: async () => {
-          const res = await fetch("/data/warehouses.json");
-          return res.json();
-        }
 
-      },
     ],
+  },
+
+  {
+    path: "/sendparcel",
+    element: <PrivateRoute><SendParcel></SendParcel></PrivateRoute>,
+    loader: async () => {
+      const res = await fetch("/data/warehouses.json");
+      return res.json();
+    }
+  },
+  {
+    path: "serve-as-rider",
+    element: <PrivateRoute><ServeAsRider></ServeAsRider></PrivateRoute>,
+    loader: async () => {
+      const res = await fetch("/data/warehouses.json");
+      return res.json();
+    }
+
   },
 
   {
@@ -106,11 +110,19 @@ const router = createBrowserRouter([
       },
       {
         path: "assign-rider",
-        element: <AdminRoute><AssignRider/></AdminRoute>
+        element: <AdminRoute><AssignRider /></AdminRoute>
       },
       {
         path: "pending-deliveries",
         element: <RiderRoute><PendingDeliveries></PendingDeliveries></RiderRoute>
+      },
+      {
+        path: "my-deliveries",
+        element: <RiderRoute><MyDeliveries></MyDeliveries></RiderRoute>
+      },
+      {
+        path: "my-earnings",
+        element: <RiderRoute><MyEarnings></MyEarnings></RiderRoute>
       },
 
     ]

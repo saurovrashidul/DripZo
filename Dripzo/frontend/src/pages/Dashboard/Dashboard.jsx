@@ -47,6 +47,20 @@ const Dashboard = () => {
 
                                 </NavLink>
                             </li>
+                            <li className='text-white  gap-2'>
+
+                                <NavLink to="/dashboard/my-deliveries">
+                                    <FiUserPlus /> My Deliveries
+
+                                </NavLink>
+                            </li>
+                            <li className='text-white  gap-2'>
+
+                                <NavLink to="/dashboard/my-earnings">
+                                    <FiUserPlus /> My Earnings
+
+                                </NavLink>
+                            </li>
                         </>
                     )
 
