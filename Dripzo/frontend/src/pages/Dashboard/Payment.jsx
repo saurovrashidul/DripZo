@@ -34,7 +34,7 @@ const Payment = () => {
                 parcelId: parcel._id,
                 amount: parcel.totalCost,
                 customerEmail: user.email,
-                customerName: user.displayName,
+                customerName: user.displayName || parcel.userName || "",
 
             };
 

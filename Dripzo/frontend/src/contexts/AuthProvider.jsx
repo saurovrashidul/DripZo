@@ -11,7 +11,7 @@ const AuthProvider = ({ children }) => {
 
 
     const [user, setUser] = useState(null);
-    
+
 
     // loading state
     const [loading, setLoading] = useState(true);
@@ -19,13 +19,17 @@ const AuthProvider = ({ children }) => {
     // Create User (Register)
     const createUser = (email, password) => {
         setLoading(true);
-        return createUserWithEmailAndPassword(auth, email, password);
+        return createUserWithEmailAndPassword(auth, email, password)
+
+ 
+
     };
 
     // Sign In (Login)
     const signIn = (email, password) => {
         setLoading(true);
-        return signInWithEmailAndPassword(auth, email, password);
+        return signInWithEmailAndPassword(auth, email, password)
+
     };
 
     // googleSignin
@@ -49,21 +53,21 @@ const AuthProvider = ({ children }) => {
         return () => unsubscribe();
     }, []);
 
-// useEffect(() => {
-//     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-//         setUser(currentUser);
+    // useEffect(() => {
+    //     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+    //         setUser(currentUser);
 
-//         if (currentUser?.email) {
-//             await axiosSecure.post("/jwt", { email: currentUser.email });
-//         } else {
-//             await axiosSecure.post("/logout");
-//         }
+    //         if (currentUser?.email) {
+    //             await axiosSecure.post("/jwt", { email: currentUser.email });
+    //         } else {
+    //             await axiosSecure.post("/logout");
+    //         }
 
-//         setLoading(false); // 🔑 auth finished
-//     });
+    //         setLoading(false); // 🔑 auth finished
+    //     });
 
-//     return () => unsubscribe();
-// }, []);
+    //     return () => unsubscribe();
+    // }, []);
 
 
 

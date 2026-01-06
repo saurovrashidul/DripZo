@@ -1,6 +1,11 @@
 import React from 'react';
 import { NavLink, Outlet } from 'react-router';
-import { FiHome, FiPackage, FiCreditCard, FiUsers, FiUserCheck, FiUserPlus } from 'react-icons/fi';
+import {
+    FiUserX,
+    FiUserCheck,
+    FiShield,
+    FiClock, FiTruck, FiDollarSign, FiHome, FiPackage, FiCreditCard, 
+} from 'react-icons/fi';
 import useAdmin from '../../hooks/useAdmin';
 import useRider from '../../hooks/useRider';
 
@@ -40,25 +45,22 @@ const Dashboard = () => {
                     </li>
                     {isRider && (
                         <>
-                            <li className='text-white  gap-2'>
 
-                                <NavLink to="/dashboard/pending-deliveries">
-                                    <FiUserPlus /> Pending Deliveries
-
+                            <li className="text-white gap-2 ">
+                                <NavLink to="/dashboard/pending-deliveries" className="flex items-center gap-2">
+                                    <FiClock /> Pending Deliveries
                                 </NavLink>
                             </li>
-                            <li className='text-white  gap-2'>
 
-                                <NavLink to="/dashboard/my-deliveries">
-                                    <FiUserPlus /> My Deliveries
-
+                            <li className="text-white gap-2">
+                                <NavLink to="/dashboard/my-deliveries" className="flex items-center gap-2">
+                                    <FiTruck /> My Deliveries
                                 </NavLink>
                             </li>
-                            <li className='text-white  gap-2'>
 
-                                <NavLink to="/dashboard/my-earnings">
-                                    <FiUserPlus /> My Earnings
-
+                            <li className="text-white gap-2 ">
+                                <NavLink to="/dashboard/my-earnings" className="flex items-center gap-2">
+                                    <FiDollarSign /> My Earnings
                                 </NavLink>
                             </li>
                         </>
@@ -71,29 +73,29 @@ const Dashboard = () => {
                         isAdmin && (<>
 
 
-                            <li className='text-white  gap-2'>
+                            <li className='text-white gap-2'>
                                 <NavLink to="/dashboard/pending-riders">
-                                    <FiUsers /> Pending Riders
+                                    <FiUserX /> Pending Riders
                                 </NavLink>
                             </li>
-                            <li className='text-white  gap-2'>
+
+                            <li className='text-white gap-2'>
                                 <NavLink to="/dashboard/active-riders">
                                     <FiUserCheck /> Active Riders
                                 </NavLink>
                             </li>
-                            <li className='text-white  gap-2'>
+
+                            <li className='text-white gap-2'>
                                 <NavLink to="/dashboard/assign-admin">
-                                    <FiUserPlus /> Assign Admin Role
-
+                                    <FiShield /> Assign Admin Role
                                 </NavLink>
                             </li>
-                            <li className='text-white  gap-2'>
+
+                            <li className='text-white gap-2'>
                                 <NavLink to="/dashboard/assign-rider">
-                                    <FiUserPlus /> Assign Rider
-
+                                    <FiUserCheck /> Assign Rider
                                 </NavLink>
                             </li>
-
                         </>)
                     }
 

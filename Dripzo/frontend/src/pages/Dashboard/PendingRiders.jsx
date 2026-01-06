@@ -338,7 +338,47 @@ const PendingRiders = () => {
             </table>
           </div>
         </>
+
+
+
+
+
       )}
+
+      {/* modal */}
+
+      {selectedRider && (
+        <dialog className="modal modal-open">
+          <div className="modal-box max-w-lg">
+            <h3 className="font-bold text-lg mb-3">Rider Details</h3>
+
+            <div className="space-y-2 text-sm">
+              <p><strong>Name:</strong> {selectedRider.name}</p>
+              <p><strong>Email:</strong> {selectedRider.email}</p>
+              <p><strong>Phone:</strong> {selectedRider.phone}</p>
+              <p><strong>NID:</strong> {selectedRider.nid}</p>
+              <p><strong>District:</strong> {selectedRider.district}</p>
+              <p><strong>Service Center:</strong> {selectedRider.serviceCenter}</p>
+              <p><strong>Vehicle Type:</strong> {selectedRider.vehicleType}</p>
+              <p><strong>Vehicle Number:</strong> {selectedRider.vehicleNumber}</p>
+              <p><strong>Registration Number:</strong> {selectedRider.registrationNumber}</p>
+              <p><strong>Address:</strong> {selectedRider.address}</p>
+              <p><strong>Status:</strong> {selectedRider.status}</p>
+            </div>
+
+            <div className="modal-action">
+              <button
+                className="btn"
+                onClick={() => setSelectedRider(null)}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </dialog>
+      )}
+
+
     </div>
 
 
