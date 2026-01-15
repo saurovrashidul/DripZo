@@ -28,6 +28,7 @@ import PendingDeliveries from './pages/Dashboard/PendingDeliveries';
 import RiderRoute from './route/RiderRoute';
 import MyDeliveries from './pages/Dashboard/MyDeliveries';
 import MyEarnings from './pages/Dashboard/MyEarnings';
+import PaymentCancel from './pages/Dashboard/PaymentCancel';
 
 
 
@@ -91,6 +92,10 @@ const router = createBrowserRouter([
       {
         path: "payment-fail",
         element: <PaymentFail></PaymentFail>
+      },
+      {
+        path: "payment-cancel",
+        element: <PaymentCancel></PaymentCancel>
       },
       {
         path: "payment-history",

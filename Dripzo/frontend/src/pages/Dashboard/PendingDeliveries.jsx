@@ -2,12 +2,16 @@ import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import useAuth from "../../contexts/useAuth";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 
 
 const PendingDeliveries = () => {
   const axiosSecure = useAxiosSecure();
   const { user, loading } = useAuth();
   const queryClient = useQueryClient();
+  const [selectedParcel, setSelectedParcel] = useState(null);
+const [isModalOpen, setIsModalOpen] = useState(false);
+
 
   const {
     data: parcels = [],
@@ -129,14 +133,14 @@ const PendingDeliveries = () => {
             <thead>
               <tr>
                 <th>Tracking ID</th>
-                <th>Parcel</th>
-                <th>Type</th>
+                {/* <th>Parcel</th>
+                <th>Type</th> */}
                 <th>Sender</th>
                 <th>Receiver</th>
                 <th>Cost</th>
                 <th>Assigned At</th>
                 <th>Status</th>
-                <th>Action</th>
+                <th className="text-center">Action</th>
 
               </tr>
             </thead>
@@ -145,8 +149,8 @@ const PendingDeliveries = () => {
               {parcels.map((parcel) => (
                 <tr key={parcel._id}>
                   <td>{parcel.trackingID}</td>
-                  <td>{parcel.title}</td>
-                  <td>{parcel.type}</td>
+                  {/* <td>{parcel.title}</td>
+                  <td>{parcel.type}</td> */}
                   <td>{parcel.senderRegion}</td>
                   <td>{parcel.receiverRegion}</td>
                   <td>৳ {parcel.totalCost}</td>
@@ -160,7 +164,22 @@ const PendingDeliveries = () => {
                       {parcel.deliveryStatus}
                     </span>
                   </td>
-                  <td>{renderActionButton(parcel)}</td>
+                  {/* <td>{renderActionButton(parcel)}</td>*/}
+
+                  <td className="flex gap-2">
+  {renderActionButton(parcel)}
+
+  <button
+    className="btn btn-sm btn-outline"
+    onClick={() => {
+      setSelectedParcel(parcel);
+      setIsModalOpen(true);
+    }}
+  >
+    Details
+  </button>
+</td>
+
 
                 </tr>
               ))}
@@ -169,6 +188,64 @@ const PendingDeliveries = () => {
           </table>
         </div>
       )}
+
+
+
+<input
+  type="checkbox"
+  className="modal-toggle"
+  checked={isModalOpen}
+  readOnly
+/>
+
+<div className="modal modal-middle">
+  <div className="modal-box max-w-xl">
+
+    <h3 className="font-bold text-lg text-center mb-4">
+      Parcel Details
+    </h3>
+
+    {selectedParcel && (
+      <div className="space-y-2 text-sm">
+        <p><strong>Tracking ID:</strong> {selectedParcel.trackingID}</p>
+        <p><strong>Title:</strong> {selectedParcel.title}</p>
+        <p><strong>Type:</strong> {selectedParcel.type}</p>
+        <p><strong>Sender Region:</strong> {selectedParcel.senderRegion}</p>
+        <p><strong>Receiver Region:</strong> {selectedParcel.receiverRegion}</p>
+        <p><strong>Total Cost:</strong> ৳ {selectedParcel.totalCost}</p>
+
+        <p>
+          <strong>Status:</strong>{" "}
+          <span className="badge badge-info capitalize">
+            {selectedParcel.deliveryStatus}
+          </span>
+        </p>
+
+        <p><strong>Payment Method:</strong> {selectedParcel.paymentMethod}</p>
+        <p><strong>Payment Status:</strong> {selectedParcel.paymentStatus}</p>
+
+        {selectedParcel.assignedAt && (
+          <p>
+            <strong>Assigned At:</strong>{" "}
+            {new Date(selectedParcel.assignedAt).toLocaleString()}
+          </p>
+        )}
+      </div>
+    )}
+
+    <div className="modal-action">
+      <button
+        className="btn"
+        onClick={() => setIsModalOpen(false)}
+      >
+        Close
+      </button>
+    </div>
+
+  </div>
+</div>
+
+
     </div>
   );
 };

@@ -130,6 +130,18 @@ const Payment = () => {
                         Click For Payment
                     </button>
 
+
+                    <div className="mt-4 p-3 rounded-lg bg-warning/10 border border-warning">
+                        <p className="text-sm font-semibold text-warning">
+                            Cash on Delivery (COD)
+                        </p>
+                        <p className="text-xs text-gray-600 mt-1">
+                            You can pay the delivery charge directly to the rider
+                            when your parcel is successfully delivered.
+                            No online payment required.
+                        </p>
+                    </div>
+
                     <p className="text-center text-xs text-gray-400">
                         Secured & encrypted payment
                     </p>

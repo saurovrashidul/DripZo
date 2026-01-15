@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import Swal from "sweetalert2";
+import { FaMotorcycle } from "react-icons/fa";
 
 const AssignRider = () => {
   const axiosSecure = useAxiosSecure();
@@ -10,9 +11,9 @@ const AssignRider = () => {
 
   // 🔹 Fetch parcels
   const { data: parcels = [], isLoading } = useQuery({
-    queryKey: ["parcels"],
+    queryKey: ["assignable-parcels"],
     queryFn: async () => {
-      const res = await axiosSecure.get("/parcels");
+      const res = await axiosSecure.get("/parcels/assignable");
       return res.data;
     },
   });
@@ -82,7 +83,7 @@ const AssignRider = () => {
       setSelectedParcel(null);
 
       // 🔄 refetch parcels after assignment
-      queryClient.invalidateQueries(["parcels"]);
+      queryClient.invalidateQueries(["assignable-parcels"]);
     },
     onError: (error) => {
       console.error(error);
@@ -105,95 +106,129 @@ const AssignRider = () => {
   }
 
   return (
-    <div className="p-6">
-      <h2 className="text-2xl font-bold mb-4 text-center">Assign Riders ({riders.length})</h2>
 
-      {/* 🔹 Parcel Table */}
-      <div className="overflow-x-auto">
-        <table className="table table-zebra">
-          <thead>
-            <tr>
-              <th>Tracking ID</th>
-              <th>Type</th>
-              <th>Sender Region</th>
-              <th>Receiver Region</th>
-              <th>Cost</th>
-              <th>Submission Date</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {parcels.map((parcel) => (
-              <tr key={parcel._id}>
-                <td>{parcel.trackingID}</td>
-                <td>{parcel.type}</td>
-                <td>{parcel.senderRegion}</td>
-                <td>{parcel.receiverRegion}</td>
-                <td>৳ {parcel.totalCost}</td>
-                <td>{parcel.submissionDateTime}</td>
-                <td>
-                  <button
-                    className="btn btn-sm btn-primary"
-                    onClick={() => setSelectedParcel(parcel)}
-                  >
-                    Assign Rider
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
 
-      {/* 🔹 Modal */}
-      {selectedParcel && (
-        <dialog className="modal modal-open">
-          <div className="modal-box">
-            <h3 className="font-bold text-lg mb-3">
-              Assign Rider for {selectedParcel.trackingID}
-            </h3>
+ <div className="p-4 md:p-6 max-w-7xl mx-auto">
+  <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center text-primary">
+    Assign Riders ({riders.length})
+  </h2>
 
-            {matchedRiders.length === 0 ? (
-              <p className="text-red-500">
-                No approved rider available in this district
-              </p>
-            ) : (
-              <div className="space-y-3">
-                {matchedRiders.map((rider) => (
-                  <div
-                    key={rider._id}
-                    className="p-3 border rounded flex justify-between items-center"
-                  >
-                    <div>
-                      <p className="font-semibold">{rider.name}</p>
-                      <p className="text-sm">{rider.phone}</p>
-                      <p className="text-sm">{rider.vehicleNumber}</p>
-                    </div>
-                    <button
-                      className="btn btn-sm btn-success"
-                      onClick={() => handleAssignRider(rider)}
-                      disabled={assignRiderMutation.isLoading}
-                    >
-                      {assignRiderMutation.isLoading ? "Assigning..." : "Assign"}
-                    </button>
-
-                  </div>
-                ))}
-              </div>
-            )}
-
-            <div className="modal-action">
+  {/* ---------- Table for Tablet & PC ---------- */}
+  <div className="hidden md:block border rounded-lg shadow-lg">
+    <table className="table table-zebra table-compact w-full">
+      <thead className="bg-primary text-white">
+        <tr>
+          <th className="whitespace-nowrap">Tracking ID</th>
+          <th className="whitespace-nowrap">Type</th>
+          <th className="whitespace-nowrap">Sender Region</th>
+          <th className="whitespace-nowrap">Receiver Region</th>
+          <th className="whitespace-nowrap">Cost</th>
+          <th className="whitespace-nowrap">Submission Date</th>
+          <th className="whitespace-nowrap text-center">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {parcels.map((parcel) => (
+          <tr key={parcel._id} className="hover:bg-gray-50 transition-all">
+            <td className="font-medium">{parcel.trackingID}</td>
+            <td>{parcel.type}</td>
+            <td>{parcel.senderRegion}</td>
+            <td>{parcel.receiverRegion}</td>
+            <td className="text-green-600 font-semibold">৳{parcel.totalCost}</td>
+            <td>{parcel.submissionDateTime}</td>
+            <td className="flex justify-center">
               <button
-                className="btn"
-                onClick={() => setSelectedParcel(null)}
+                className="btn btn-sm btn-primary flex items-center gap-1"
+                onClick={() => setSelectedParcel(parcel)}
               >
-                Close
+                <FaMotorcycle className="w-4 h-4" /> Assign
               </button>
-            </div>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  {/* ---------- Card Style for Mobile ---------- */}
+  <div className="flex flex-col space-y-4 md:hidden">
+    {parcels.map((parcel) => (
+      <div
+        key={parcel._id}
+        className="border rounded-lg shadow-lg p-4 bg-gradient-to-r from-blue-50 to-white space-y-2"
+      >
+        <div className="flex justify-between items-center mb-2">
+          <span className="font-medium text-lg">{parcel.trackingID}</span>
+          <span className="badge badge-info">{parcel.type}</span>
+        </div>
+        <p><strong>Sender:</strong> {parcel.senderRegion}</p>
+        <p><strong>Receiver:</strong> {parcel.receiverRegion}</p>
+        <p className="text-green-700 font-semibold"><strong>Cost:</strong> ৳{parcel.totalCost}</p>
+        <p><strong>Submitted:</strong> {parcel.submissionDateTime}</p>
+        <button
+          className="btn btn-sm btn-primary w-full flex justify-center items-center gap-2"
+          onClick={() => setSelectedParcel(parcel)}
+        >
+          <FaMotorcycle className="w-4 h-4" /> Assign Rider
+        </button>
+      </div>
+    ))}
+  </div>
+
+  {/* ---------- Modal ---------- */}
+  {selectedParcel && (
+    <dialog className="modal modal-open">
+      <div className="modal-box w-11/12 md:w-2/3 max-w-lg mx-auto my-auto ">
+        <h3 className="font-bold text-xl md:text-2xl mb-4 text-center text-primary">
+          Assign Rider for {selectedParcel.trackingID}
+        </h3>
+
+        {matchedRiders.length === 0 ? (
+          <p className="text-red-500 text-center font-semibold">
+            No approved rider available in this district
+          </p>
+        ) : (
+          <div className="space-y-3">
+            {matchedRiders.map((rider) => (
+              <div
+                key={rider._id}
+                className="p-3 border rounded-lg flex flex-col sm:flex-row justify-between items-start sm:items-center shadow-sm hover:shadow-md transition-all bg-gradient-to-r from-white to-blue-50"
+              >
+                <div className="space-y-1">
+                  <p className="font-semibold text-blue-700">{rider.name}</p>
+                  <p className="text-sm text-gray-600">{rider.phone}</p>
+                  <p className="text-sm text-gray-600">{rider.vehicleNumber}</p>
+                </div>
+                <button
+                  className="btn btn-success btn-sm mt-2 sm:mt-0"
+                  onClick={() => handleAssignRider(rider)}
+                  disabled={assignRiderMutation.isLoading}
+                >
+                  {assignRiderMutation.isLoading ? "Assigning..." : "Assign"}
+                </button>
+              </div>
+            ))}
           </div>
-        </dialog>
-      )}
-    </div>
+        )}
+
+        <div className="modal-action mt-4">
+          <button
+            className="btn w-full md:w-auto bg-red-500 hover:bg-red-600 text-white"
+            onClick={() => setSelectedParcel(null)}
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </dialog>
+  )}
+</div> 
+
+
+
+
+
+
   );
 };
 
